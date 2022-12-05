@@ -1,15 +1,10 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
-WORKDIR /App
+FROM gradle:7.6.0-jdk11-alpine AS build
+COPY --chown=gradle:gradle . /app
+WORKDIR /app
+RUN gradle assemble
 
-# Copy everything
-COPY . ./
-# Restore as distinct layers
-RUN dotnet restore
-# Build and publish a release
-RUN dotnet publish -c Release -o out
-
-# Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
-WORKDIR /App
-COPY --from=build-env /App/out .
-ENTRYPOINT ["dotnet", "DotNet.Docker.dll"]
+FROM amazoncorretto:18-alpine-jdk
+EXPOSE 8080
+RUN mkdir /app
+COPY --from=build /app/build/libs/*.jar /app/micronaut-application.jar
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom","-jar","/app/micronaut-application.jar"]

@@ -1,5 +1,5 @@
 applicationType: default
-defaultPackage: example.micronaut
+defaultPackage: app.micronaut
 testFramework: junit
 sourceLanguage: kotlin
 buildTool: gradle

@@ -1,16 +1,20 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.6.21"
-    id("org.jetbrains.kotlin.kapt") version "1.6.21"
+    id("org.jetbrains.kotlin.jvm") version "1.6.10"
+    id("org.jetbrains.kotlin.kapt") version "1.6.10"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.6.21"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("io.micronaut.application") version "3.6.3"
 }
 
 version = "0.1"
-group = "example.micronaut"
+group = "app.micronaut"
 
 repositories {
     mavenCentral()
+}
+
+dockerBuild {
+    images = ["[REPO_URL]/[NAMESPACE]/my-image:$project.version"]
 }
 
 dependencies {
@@ -29,7 +33,7 @@ dependencies {
 
 
 application {
-    mainClass.set("example.micronaut.ApplicationKt")
+    mainClass.set("app.micronaut.ApplicationKt")
 }
 java {
     sourceCompatibility = JavaVersion.toVersion("1.8")
@@ -53,7 +57,7 @@ micronaut {
     testRuntime("junit5")
     processing {
         incremental(true)
-        annotations("example.micronaut.*")
+        annotations("app.micronaut.*")
     }
 }
 
